@@ -1,0 +1,52 @@
+@import './base.css';
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+.mt-3 {
+  margin-top: 2rem !important;
+}
+
+.label-txt {
+  margin-bottom: 0.5rem !important;
+  display: inline-block;
+  font-size: 1rem;
+}
+
+.inp-search {
+  width: 100%;
+}
+
+.fw-bold {
+  font-weight: bold;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+
+  #app {
+    display: grid;
+    padding: 0 2rem;
+  }
+}
