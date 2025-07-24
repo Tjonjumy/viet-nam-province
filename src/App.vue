@@ -4,6 +4,7 @@
     <label class="label-txt">Tỉnh/Thành</label>
     <InputText
       v-model="province"
+      v-on:keydown.enter.prevent='onSearch'
       name="province"
       type="text"
       placeholder="Tìm kiếm theo tỉnh/thành"
@@ -14,6 +15,7 @@
     <label class="label-txt">Xã/Phường</label>
     <InputText
       v-model="ward"
+      v-on:keydown.enter.prevent='onSearch'
       name="ward"
       type="text"
       placeholder="Tìm kiếm theo xã/phường"
@@ -59,6 +61,7 @@ import responseApi from "./data/data.js";
 const province = ref("hà nội");
 const ward = ref("");
 const datas = ref([]);
+const tempDatas = ref([]);
 
 onMounted(() => {
   datas.value = flattenedData(responseApi.data);
@@ -67,20 +70,24 @@ onMounted(() => {
 const onSearch = () => {
   if (province.value) {
     const provinceQuery = removeVietnameseTones(province.value);
-    datas.value = flattenedData(responseApi.data).filter((element) => {
+    tempDatas.value = flattenedData(responseApi.data).filter((element) => {
       const itemName = removeVietnameseTones(element.province);
       return itemName.includes(provinceQuery);
     });
   } else {
-    datas.value = flattenedData(responseApi.data);
+    tempDatas.value = flattenedData(responseApi.data);
   }
 
   if (ward.value) {
     const wardQuery = removeVietnameseTones(ward.value);
-    datas.value = flattenedData(responseApi.data).filter((element) => {
+    datas.value = tempDatas.value.filter((element) => {
       const itemName = removeVietnameseTones(element.name);
-      return itemName.includes(wardQuery);
+      return itemName.includes(wardQuery) || element.mergedFrom.some(e => {
+        return removeVietnameseTones(e).includes(wardQuery)
+      });
     });
+  } else {
+    datas.value = tempDatas.value;
   }
 };
 
@@ -103,7 +110,6 @@ const flattenedData = (data) => {
       mergedFrom: ward.mergedFrom,
     }))
   );
-  console.log(demo);
   
   return demo;
 };
